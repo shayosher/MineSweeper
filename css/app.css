@@ -1,0 +1,84 @@
+body {
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+table {
+    border: 2px solid rgb(127, 123, 123);
+    margin: 3% auto;
+    border-collapse: collapse;
+}
+
+.cell {
+    border: 2px solid gray;
+    background-color: #C0C0C0;
+
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+
+    font-weight: bold;
+    font-size: 20px;
+
+    transition: box-shadow 0.3s ease;
+}
+
+.cell:hover {
+    box-shadow: inset 0px 0px 10px 3px rgba(0, 0, 0, 0.5);
+}
+
+.one {
+    color: rgb(36, 36, 150);
+}
+
+.two {
+    color: rgb(39, 124, 39);
+}
+
+.three {
+    color: red;
+}
+
+.four {
+    color: rgb(70, 17, 17);
+}
+
+.cell-isClicked {
+    border: 2px dashed gray;
+    background-color: rgb(227, 222, 222);
+}
+
+
+
+/* .states-div {
+    border: 5px double black;
+    margin: 0px 25%;
+    padding: 8px;
+} */
+
+
+
+/* button {
+    border: none;
+    border-radius: 10px;
+    background-image: linear-gradient(rgb(196, 166, 129), rgb(216, 161, 94));
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: 600;
+} */
+
+
+
+/* .notClicked {
+    background-color: rgb(237, 190, 132);
+    border-top-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.clicked {
+    background-color: rgb(232, 150, 51);
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+} */
