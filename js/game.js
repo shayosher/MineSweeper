@@ -44,7 +44,7 @@ function onInit() {
     handelShownCount()
     handelMarkedCount()
     handelLives()
-    // handelTimer()
+    handelTimer()
 }
 
 function buildBoard() {
