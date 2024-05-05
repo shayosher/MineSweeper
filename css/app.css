@@ -3,9 +3,33 @@ body {
     font-family: 'Courier New', Courier, monospace;
 }
 
+.main-container {
+    background-color: rgb(227, 222, 222);
+    margin: 0px 600px;
+
+    border: 5px solid gray;
+}
+
+.states {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+
+    padding: 0PX 10px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    padding: 0px 60px 10px 60px;
+}
+
 table {
-    border: 2px solid rgb(127, 123, 123);
-    margin: 3% auto;
+    border: 2px solid gray;
+    margin: auto;
     border-collapse: collapse;
 }
 
@@ -47,38 +71,3 @@ table {
     border: 2px dashed gray;
     background-color: rgb(227, 222, 222);
 }
-
-
-
-/* .states-div {
-    border: 5px double black;
-    margin: 0px 25%;
-    padding: 8px;
-} */
-
-
-
-/* button {
-    border: none;
-    border-radius: 10px;
-    background-image: linear-gradient(rgb(196, 166, 129), rgb(216, 161, 94));
-    color: white;
-    cursor: pointer;
-    padding: 10px;
-    font-size: 20px;
-    font-weight: 600;
-} */
-
-
-
-/* .notClicked {
-    background-color: rgb(237, 190, 132);
-    border-top-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-}
-
-.clicked {
-    background-color: rgb(232, 150, 51);
-    border-top-right-radius: 20px;
-    border-bottom-left-radius: 20px;
-} */
