@@ -261,6 +261,10 @@ function gameOver() {
     gGame.isOn = false
 }
 
+function onHint(elHint) {
+    elHint.innerHTML = '<img src="img/bulbOn.jpg">'
+}
+
 function handelSmiley(state) {
     document.querySelector('.smiley').innerText = state
 }

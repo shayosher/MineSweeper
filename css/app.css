@@ -5,7 +5,7 @@ body {
 
 .main-container {
     background-color: rgb(227, 222, 222);
-    margin: 0px 600px;
+    margin: 5px 500px;
 
     border: 5px solid gray;
 }
@@ -20,11 +20,32 @@ body {
 }
 
 .buttons {
+    position: absolute;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
 
-    padding: 0px 60px 10px 60px;
+    left: 400px;
+    top: 100px;
+}
+
+.buttons button {
+    width: 40px;
+    height: 40px;
+}
+
+.ints {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+
+    left: 300px;
+    top: 100px;
+}
+
+.ints img {
+    width: 27px;
+    margin-top: 5px;
+
 }
 
 table {
