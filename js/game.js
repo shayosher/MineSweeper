@@ -18,10 +18,12 @@ var gLevel = {
     forVictory: 14
 }
 var gTimerInterval
+var gHintMode
 
 function onInit() {
 
     restartTimer()
+    gHintMode = false
     gGame = {
         isOn: true,
         shownCount: 0,
@@ -38,6 +40,8 @@ function onInit() {
     handelShownCount()
     handelMarkedCount()
     renderLives()
+    resHint()
+    addBestScore()
 }
 
 function buildBoard() {
@@ -117,6 +121,11 @@ function onCellClicked(elCell, i, j) {
 
     if (cell.isMarked) return
     if (cell.isShown) return
+
+    if (gHintMode) {
+        handelHint(elCell, i, j)
+        return
+    }
 
     if (cell.isMine) {
         elCell.innerHTML = MINE //renderCell({ i, j }, MINE)
@@ -250,9 +259,66 @@ function restartTimer() {
 function checkVictory() {
     if (gGame.shownCount === gLevel.forVictory && gGame.markedCount === gLevel.mines) {
         clearInterval(gTimerInterval)
+
+        const minutes = +document.querySelector('.minutes').innerText
+        const seconds = +document.querySelector('.seconds').innerText
+        const time = { minutes, seconds }
+
+        if (gLevel.size === 4) {
+            const bestMin = localStorage.getItem("score16Min")
+            const bestSec = localStorage.getItem("score16Sec")
+            if (!bestMin || time.minutes < bestMin) {
+                localStorage.setItem("score16Min", time.minutes)
+                localStorage.setItem("score16Sec", time.seconds)
+            }
+            if (time.minutes === bestMin) {
+                if (time.seconds < bestSec) {
+                    localStorage.setItem("score16Min", time.minutes)
+                    localStorage.setItem("score16Sec", time.seconds)
+                }
+            }
+        }
+
+        if (gLevel.size === 8) {
+            const bestMin = localStorage.getItem("score64Min")
+            const bestSec = localStorage.getItem("score64Sec")
+            if (!bestMin || time.minutes < bestMin) {
+                localStorage.setItem("score64Min", time.minutes)
+                localStorage.setItem("score64Sec", time.seconds)
+            }
+            if (time.minutes === bestMin) {
+                if (time.seconds < bestSec) {
+                    localStorage.setItem("score64Min", time.minutes)
+                    localStorage.setItem("score64Sec", time.seconds)
+                }
+            }
+        }
+
+        if (gLevel.size === 12) {
+            const bestMin = localStorage.getItem("score144Min")
+            const bestSec = localStorage.getItem("score144Sec")
+            if (!bestMin || time.minutes < bestMin) {
+                localStorage.setItem("score144Min", time.minutes)
+                localStorage.setItem("score144Sec", time.seconds)
+            }
+            if (time.minutes === bestMin) {
+                if (time.seconds < bestSec) {
+                    localStorage.setItem("score144Min", time.minutes)
+                    localStorage.setItem("score144Sec", time.seconds)
+                }
+            }
+        }
+
         handelSmiley(WIN)
+        addBestScore()
         gGame.isOn = false
     }
+}
+function addBestScore() {
+
+    document.querySelector(".score16Best").innerText = (localStorage.getItem("score16Min") + ':' + localStorage.getItem("score16Sec"))
+    document.querySelector(".score64Best").innerText = (localStorage.getItem("score64Min") + ':' + localStorage.getItem("score64Sec"))
+    document.querySelector(".score144Best").innerText = (localStorage.getItem("score144Min") + ':' + localStorage.getItem("score144Sec"))
 }
 
 function gameOver() {
@@ -261,8 +327,76 @@ function gameOver() {
     gGame.isOn = false
 }
 
+function handelHint(elCell, cellI, cellJ) {
+
+    if (!gGame.shownCount) return
+    if (gBoard[cellI][cellJ].isMarked) return
+    if (gBoard[cellI][cellJ].isShown) return
+
+    if (gBoard[cellI][cellJ].isMine) elCell.innerHTML = MINE
+    else if (gBoard[cellI][cellJ].minesAroundCount === 0) elCell.innerHTML = EMPTY
+    else elCell.innerHTML = gBoard[cellI][cellJ].minesAroundCount
+
+
+    elCell.classList.add("cell-isClicked")
+    getNumberStyleClass(gBoard[cellI][cellJ], elCell)
+
+    for (var i = cellI - 1; i <= cellI + 1; i++) {
+        if (i < 0 || i >= gBoard.length) continue;
+        for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+            if (j < 0 || j >= gBoard[i].length) continue;
+            if (i === cellI && j === cellJ) continue
+            if (gBoard[i][j].isMarked) continue
+
+            const elNewCell = document.querySelector(`.cell-${i}-${j}`)
+
+            if (gBoard[i][j].isMine) elNewCell.innerHTML = MINE
+            else if (gBoard[i][j].minesAroundCount === 0) elNewCell.innerHTML = EMPTY
+            else elNewCell.innerHTML = gBoard[i][j].minesAroundCount
+
+
+            elNewCell.classList.add("cell-isClicked")
+            getNumberStyleClass(gBoard[i][j], elNewCell)
+        }
+    }
+
+    setTimeout(() => {
+
+        elCell.innerHTML = EMPTY
+        elCell.classList.remove("cell-isClicked")
+
+        for (var i = cellI - 1; i <= cellI + 1; i++) {
+            if (i < 0 || i >= gBoard.length) continue;
+            for (var j = cellJ - 1; j <= cellJ + 1; j++) {
+                if (j < 0 || j >= gBoard[i].length) continue;
+                if (i === cellI && j === cellJ) continue
+                if (gBoard[i][j].isMarked) continue
+                if (gBoard[i][j].isShown) continue
+
+                const elNewCell = document.querySelector(`.cell-${i}-${j}`)
+
+                elNewCell.innerHTML = EMPTY
+                elNewCell.classList.remove("cell-isClicked")
+
+            }
+        }
+    }, 1000)
+
+    gHintMode = false
+}
+
 function onHint(elHint) {
+
+    if (!gGame.shownCount) return
+
     elHint.innerHTML = '<img src="img/bulbOn.jpg">'
+    gHintMode = true
+}
+function resHint() {
+    const elHints = document.querySelectorAll('.ints button')
+    for (let i = 0; i < elHints.length; i++) {
+        elHints[i].innerHTML = '<img src="img/bulbOff.png">'
+    }
 }
 
 function handelSmiley(state) {
@@ -275,7 +409,6 @@ function handelShownCount() {
 function handelMarkedCount() {
     document.querySelector('.isMarked').innerText = `${MARKED}${gGame.markedCount}`
 }
-
 
 function onLevelBtn(value) {
     switch (value) {
@@ -306,4 +439,8 @@ function renderCell(location, value) {
     const elCell = document.querySelector(`.cell-${location.i}-${location.j}`)
     elCell.innerHTML = value
 }
+
+
+
+
 
