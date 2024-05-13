@@ -18,10 +18,14 @@ var gLevel = {
     forVictory: 14
 }
 var gTimerInterval
-var gManuallyMinesMode = false
+var gManuallyMinesMode
+var gManuallyMinesModeStartGame
+var gCountMines
 
 function onInit() {
 
+    gManuallyMinesMode = false
+    gManuallyMinesModeStartGame = false
 
     restartTimer()
     gGame = {
@@ -102,7 +106,7 @@ function renderBoard() {
         strHTML += '<tr>'
         for (var j = 0; j < gBoard[0].length; j++) {
             const className = `cell cell-${i}-${j}`
-            strHTML += `<td class="${className}" onclick="onCellClicked(this,${i},${j})" oncontextmenu="onCellMarked(event, ${i},${j})"></td>`
+            strHTML += `<td class="${className}" onclick="onCellClicked(this,${i},${j}),userSetMines(${i},${j})" oncontextmenu="onCellMarked(event, ${i},${j})"></td>`
         }
         strHTML += '</tr>'
     }
@@ -112,9 +116,11 @@ function renderBoard() {
 
 function onCellClicked(elCell, i, j) {
     if (!gGame.isOn) return
+    if (gManuallyMinesMode) return
+
     const cell = gBoard[i][j]
 
-    if (!gGame.shownCount) {
+    if (!gGame.shownCount && !gManuallyMinesModeStartGame) {
         setMinesLocations(i, j)
         setMinesNegsCount()
     }
@@ -179,6 +185,7 @@ function expandShown(cellI, cellJ) {
 function onCellMarked(event, i, j) {
     event.preventDefault()
     if (!gGame.isOn) return
+    if (gManuallyMinesMode) return
 
     const cell = gBoard[i][j]
     if (cell.isShown) return
@@ -270,6 +277,14 @@ function handelHint(elCell, cellI, cellJ) {
 
             elNewCell.classList.add("cell-isClicked")
             getNumberStyleClass(gBoard[i][j], elNewCell)
+
+            // setTimeout(() => {
+            //     elCell.innerHTML = EMPTY
+            //     elCell.classList.remove("cell-isClicked")
+
+            //     elNewCell.innerHTML = EMPTY
+            //     elNewCell.classList.remove("cell-isClicked")
+            // }, 1000)
         }
     }
 
@@ -471,5 +486,40 @@ function renderCell(location, value) {
 
 
 
+function onManuallyMines() {
+    if (gGame.shownCount) return
+    if (gManuallyMinesMode) return
+    gManuallyMinesMode = true
+    gManuallyMinesModeStartGame = true
+    gCountMines = 0
+    console.log(1);
+}
 
+function renderManuallyMinesFitback() {
+    var htmlStr
+    if (!(gLevel.mines - gCountMines)) {
+        htmlStr = `Mines sre set! Start Playing!`
+    } else {
+        htmlStr = `${gLevel.mines - gCountMines} mines to position`
+    }
+    const elRemainMines = document.querySelector('.remain-mines span')
+    elRemainMines.innerHTML = htmlStr
+}
 
+function userSetMines(i, j) {
+    if (!gManuallyMinesMode) return
+
+    const clickedCell = gBoard[i][j]
+    clickedCell.isMine = true
+    gCountMines++
+    renderManuallyMinesFitback()
+
+    if (gCountMines === gLevel.mines) {
+        setTimeout(() => {
+            gManuallyMinesMode = false
+            gCountMines = 0
+            setMinesNegsCount()
+        }, 300)
+    }
+
+}
