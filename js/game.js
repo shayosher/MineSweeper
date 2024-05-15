@@ -41,7 +41,7 @@ function onInit() {
     gBoard = buildBoard()
     renderBoard()
 
-    handelSmiley(NORMAL)
+    handelSmileyBtn(NORMAL)
     handelShownCount()
     handelMarkedCount()
     renderLives()
@@ -160,7 +160,7 @@ function expandShown(cellI, cellJ) {
     currCell.isShown = true
     gGame.shownCount++
     handelShownCount()
-    startTimer()
+    startTimer() ///////// לשנות את המיקום
 
     const elCell = document.querySelector(`.cell-${cellI}-${cellJ}`)
     elCell.innerHTML = currCell.minesAroundCount
@@ -329,7 +329,7 @@ function resHint() {
     }
 }
 
-function handelSmiley(state) {
+function handelSmileyBtn(state) {
     document.querySelector('.smiley-btn').innerText = state
 }
 
@@ -387,7 +387,7 @@ function revealAllMines(elCell) {
 
 function gameOver() {
     clearInterval(gTimerInterval)
-    handelSmiley(DEAD)
+    handelSmileyBtn(DEAD)
     gManuallyMinesMode = false
     gGame.isOn = false
 }
@@ -466,7 +466,7 @@ function checkVictory() {
             }
         }
 
-        handelSmiley(WIN)
+        handelSmileyBtn(WIN)
         addBestScore()
         gManuallyMinesMode = false
         gGame.isOn = false
@@ -478,6 +478,7 @@ function addBestScore() {
     document.querySelector(".score64Best").innerText = (localStorage.getItem("score64Min") + ':' + localStorage.getItem("score64Sec"))
     document.querySelector(".score144Best").innerText = (localStorage.getItem("score144Min") + ':' + localStorage.getItem("score144Sec"))
 }
+//דינמי
 
 function renderCell(location, value) {
     const elCell = document.querySelector(`.cell-${location.i}-${location.j}`)
@@ -522,4 +523,11 @@ function userSetMines(i, j) {
         }, 300)
     }
 
+}
+
+function getNumberStyleClass(cell, elCell) {
+    if (cell.minesAroundCount === 1) elCell.classList.add("one")
+    else if (cell.minesAroundCount === 2) elCell.classList.add("two")
+    else if (cell.minesAroundCount === 3) elCell.classList.add("three")
+    else if (cell.minesAroundCount >= 4) elCell.classList.add("four")
 }
